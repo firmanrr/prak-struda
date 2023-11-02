@@ -1,0 +1,247 @@
+#include <iostream>
+using namespace std;
+
+int Data[50];
+int size = -1;
+
+int root(int i);
+int anakKiri(int i);
+int anakKanan(int i);
+void shiftAtas(int i);
+void shiftBawah(int i);
+void tambahData(int p);
+int ambilData();
+int ambilMax();
+void hapus(int i);
+
+int main()
+{
+
+    tambahData(45);
+    tambahData(20);
+    tambahData(14);
+    tambahData(12);
+    tambahData(31);
+    tambahData(
+    tambahData(11);
+    tambahData(13);
+    tambahData(7);
+
+    int i = 0;
+
+    cout << "MAX PRIORITAS : ";
+    while (i <= size)
+    {
+        cout << Data[i] << " ";
+        i++;
+    }
+
+    cout << "\n";
+
+    cout << "NODE PALING TINGGI : "
+         << ambilMax() << "\n";
+
+    cout << "\n";
+
+    hapus(3);
+    cout << "MENGHAPUS SATU NODE : ";
+    int l = 0;
+    while (l <= size)
+    {
+        cout << Data[l] << " ";
+        l++;
+    }
+    return 0;
+}
+
+int root(int i)
+{
+
+    return (i - 1) / 2;
+}
+
+int anakKiri(int i)
+{
+
+    return ((2 * i) + 1);
+}
+
+int anakKanan(int i)
+{
+
+    return ((2 * i) + 2);
+}
+
+void shiftAtas(int i)
+{
+    while (i > 0 && Data[root(i)] < Data[i])
+    {
+        swap(Data[root(i)], Data[i]);
+        i = root(i);
+    }
+}
+
+void shiftBawah(int i)
+{
+    int maxIndex = i;
+
+    int l = anakKiri(i);
+
+    if (l <= size && Data[l] > Data[maxIndex])
+    {
+        maxIndex = l;
+    }
+
+    int r = anakKanan(i);
+
+    if (r <= size && Data[r] > Data[maxIndex])
+    {
+        maxIndex = r;
+    }
+
+    if (i != maxIndex)
+    {
+        swap(Data[i], Data[maxIndex]);
+        shiftBawah(maxIndex);
+    }
+}
+
+void tambahData(int p)
+{
+    size = size + 1;
+    Data[size] = p;
+
+    shiftAtas(size);
+}
+
+int ambilData()
+{
+    int result = Data[0];
+
+    Data[0] = Data[size];
+    size = size - 1;
+
+    shiftBawah(0);
+    return result;
+}
+
+int ambilMax()
+{
+
+    return Data[0];
+}
+
+void hapus(int i)
+{
+    Data[i] = ambilMax() + 1;
+
+    shiftAtas(i);
+    ambilData();#include <iostream>
+#include <conio.h>
+using namespace std;
+
+struct Node
+{
+    int data, p;
+    Node *next;
+
+    struct Node *f = NULL;
+    struct Node *r = NULL;
+
+    void enqueue(int d, int pr)
+    {
+        Node *tmp, *q;
+        tmp = new Node;
+        tmp->data = d;
+        tmp->p = pr;
+        if (r == NULL || pr > r->p)
+        {
+            tmp->next = r;
+            r = tmp;
+        }
+        else
+        {
+            q = r;
+            while (q->next != NULL && q->next->p >= pr)
+                q = q->next;
+            tmp->next = q->next;
+            q->next = tmp;
+        }
+    }
+
+    void display()
+    {
+        Node *temp = r;
+        while (temp != NULL)
+        {
+            cout << "\tNO PASIAN : " << temp->data << " TINGKATAN PENYAKIT : " << temp->p << endl;
+            temp = temp->next;
+        }
+    }
+
+    void dequeue()
+    {
+        Node *temp = new Node;
+        if (r == NULL)
+        {
+            cout << "ANTRIAN KOSONG\n";
+            return;
+        }
+
+        else
+        {
+            temp = r;
+            r = r->next;
+            cout << "\n\t----------------------------------------";
+            cout << "\n\tMEMANGGIL PASIEN: " << temp->data << " \nDIPRIORITASKAN KARENA PENYAKIT " << temp->p;
+            cout << "\n\t----------------------------------------\n";
+            free(temp);
+        }
+    }
+};
+
+int main()
+{
+
+    Node x;
+    int  qprior, choice, numberOfElements;
+    do
+    {
+        system("cls");
+        cout << "==== MENU ======" << endl;
+        cout << "[1].ENQ EUE " << endl;
+        cout << "[2].DISPLAY " << endl;
+        cout << "[4].DEQ UEU " << endl;
+        cout << "[3].EXIT " << endl;
+        cout << "================ " << endl;
+        cout << "PILIH : ";
+        cin >> choice;
+        switch (choice)
+        {
+        case 1:
+            cout << "MASUKKAN NOMER PASIEN : ";
+            cin >> numberOfElements;
+            cout << "TINGKAT PENYAKIT: ";
+            cin >> qprior;
+            x.enqueue(numberOfElements, qprior);
+            cout << "KLIK UNTUK MELANJUTKAN ";
+            break;
+        case 2:
+            x.display();
+            cout << "KLIK UNTUK MELANJUTKAN ";
+            break;
+        case 3:
+            x.dequeue();
+            cout << "KLIK UNTUK MELANJUTKAN ";
+            break;
+        default:
+            cout << "PILIHAN TIDAK ADA " << endl;
+            cout << "KLIK UNTUK MELANJUTKAN ";
+            break;
+        }
+        getch();
+    } while (choice != 4);
+
+    return 0;
+}
+
